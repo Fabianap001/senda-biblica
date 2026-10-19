@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recursos · Senda Bíblica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Diseño fijo — no cambia con el modo oscuro/claro del navegador */
+  :root{
+    --bg:#F3ECD9; --surface:#FFFFFF; --surface-2:#EAE1C8;
+    --ink:#241F19; --ink-soft:#6E6455;
+    --accent:#8C6D1F; --accent-text:#7A5D18; --accent-ink:#241F19;
+    --accent-2:#7C2A2A; --accent-3:#2A1B0C;
+    --line:#DDD2B4; --cover-ink:#F5EFE0;
+    /* Colores de estado — siempre acompañados de ícono + texto */
+    --error:#A8322A;   --error-on-dark:#F0A08F;
+    --success:#2E6B3E; --success-on-dark:#8FD1A0;
+    --info:#7A5D18;    --info-on-dark:#C9A34F;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size:17px; line-height:1.6;
+  }
+  img{max-width:100%}
+  h1,h2,h3{
+    font-family:'Playfair Display', Georgia, serif; font-weight:600; color:var(--ink);
+    line-height:1.15; margin:0 0 .5rem; text-wrap:balance;
+  }
+  h1{font-size:clamp(2.1rem,4vw + 1rem,3.1rem); font-weight:700}
+  h2{font-size:clamp(1.4rem,2vw + 1rem,1.7rem); margin:0 0 1.3rem}
+  h3{font-size:1.05rem}
+  p{margin:0 0 1rem; color:var(--ink); max-width:64ch}
+  a{color:var(--accent-2)}
+  ul,ol{padding:0;margin:0;list-style:none}
+  .eyebrow{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.78rem; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .6rem;
+  }
+
+  .site-header{
+    position:relative; isolation:isolate;
+    background:
+      linear-gradient(175deg, rgba(14,8,3,.5), rgba(14,8,3,.74)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .header-inner{
+    max-width:1100px; margin-inline:auto; padding-inline:20px;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding-block:1.05rem; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--cover-ink)}
+  .brand-mark{width:26px; height:26px; color:var(--accent); flex:none}
+  .brand-name{font-family:'Playfair Display', serif; font-weight:600; font-size:1.15rem; letter-spacing:.01em}
+  .site-nav{display:flex; gap:1.4rem; font-family:'IBM Plex Sans', sans-serif; font-size:.92rem; font-weight:500}
+  .site-nav a{color:rgba(245,239,224,.72); text-decoration:none; padding-block:.2rem; border-bottom:2px solid transparent}
+  .site-nav a:hover{color:var(--cover-ink)}
+  .site-nav a[aria-current="page"]{color:var(--cover-ink); border-bottom-color:var(--accent)}
+  .header-actions{display:flex; align-items:center; gap:1.3rem; flex-wrap:wrap}
+  .icon-link{
+    display:flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem;
+    color:rgba(245,239,224,.72); border-radius:50%; flex:none; transition:color .12s ease, background .12s ease;
+  }
+  .icon-link svg{width:19px; height:19px}
+  .icon-link:hover{color:var(--cover-ink); background:rgba(255,255,255,.1)}
+
+  main{
+    background:var(--bg);
+    padding-block:2.5rem 3.5rem;
+  }
+  section{max-width:1100px; margin-inline:auto; padding-inline:20px; margin-block:3rem}
+  .page-intro p{color:var(--ink-soft); font-size:1.05rem; max-width:60ch}
+
+  .resource-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.4rem}
+  .resource-card{
+    background:#2A1B0C; border:1px solid rgba(245,239,224,.15); border-radius:2px;
+    padding:1.4rem; border-top:3px solid #C9A34F;
+  }
+  .resource-card svg{width:24px; height:24px; color:#C9A34F; margin-bottom:.7rem}
+  .resource-card h3{color:#F5EFE0}
+  .resource-card p{color:rgba(245,239,224,.68); font-size:.95rem; margin-bottom:.8rem}
+  .resource-note{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.78rem; font-weight:600;
+    letter-spacing:.04em; color:#C9A34F;
+  }
+
+  /* FAQ */
+  .faq-item{
+    border-bottom:1px solid var(--line); padding-block:1.1rem;
+  }
+  .faq-item:first-of-type{border-top:1px solid var(--line)}
+  .faq-item summary{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:1rem;
+    cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:1rem;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{
+    content:"+"; font-size:1.3rem; color:var(--accent-2); flex:none; line-height:1;
+    transition:transform .15s ease;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item p{margin-top:.8rem; margin-bottom:0; color:var(--ink-soft); max-width:60ch}
+
+  /* Contact */
+  .contact-row{
+    display:flex; align-items:center; justify-content:space-between; gap:.9rem; flex-wrap:wrap;
+    background:#2A1B0C; border:1px solid rgba(245,239,224,.15); border-radius:2px;
+    padding:1rem 1.2rem; max-width:480px;
+  }
+  .contact-value{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.95rem; color:#F5EFE0; user-select:all;
+  }
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:.85rem;
+    text-decoration:none; padding:.55rem 1rem; border-radius:3px; display:inline-block;
+    border:1.5px solid var(--ink-soft); background:transparent; color:var(--ink); cursor:pointer;
+    transition:border-color .12s ease;
+  }
+  .btn:hover{border-color:var(--ink)}
+  .btn:active{transform:translateY(1px)}
+
+  .btn-copy{
+    border-color:rgba(0,0,0,.2); color:#2A1B0C;
+    background:
+      linear-gradient(175deg, rgba(255,255,255,.12), rgba(0,0,0,.18)),
+      url('leather-tan.jpg') center/cover;
+  }
+  .btn-copy:hover{filter:brightness(.93); border-color:rgba(0,0,0,.3)}
+  /* Estados del botón copiar: confirmación (éxito) e información (copia manual) */
+  .btn-copy.is-success{background:var(--success-on-dark); color:#2A1B0C; border-color:var(--success-on-dark)}
+  .copy-status{
+    display:flex; align-items:center; gap:.5rem; min-height:1.6rem; margin:.7rem 0 0;
+    font-family:'IBM Plex Sans', sans-serif; font-size:.9rem; font-weight:500;
+  }
+  .copy-status:empty{visibility:hidden}
+  .copy-status .state-icon{
+    display:inline-grid; place-items:center; width:1.35rem; height:1.35rem; border-radius:50%;
+    font-size:.8rem; font-weight:700; line-height:1; color:#FBF7EC;
+  }
+  .copy-status.is-success{color:var(--success)}
+  .copy-status.is-success .state-icon{background:var(--success)}
+  .copy-status.is-info{color:var(--info)}
+  .copy-status.is-info .state-icon{background:var(--info)}
+
+  .site-footer{
+    position:relative; padding-block:2.2rem; margin-top:2rem;
+    background:
+      linear-gradient(5deg, rgba(14,8,3,.72), rgba(14,8,3,.5)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-footer::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .footer-inner{max-width:1100px; margin-inline:auto; padding-inline:20px}
+  .footer-verse{font-family:'Playfair Display', serif; font-style:normal; color:var(--cover-ink); font-size:.95rem; margin-bottom:1rem; opacity:.94}
+  .footer-meta{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.75rem; font-family:'IBM Plex Sans', sans-serif; font-size:.85rem; color:rgba(245,239,224,.68)}
+  .footer-meta nav{display:flex; gap:1rem}
+  .footer-meta a{color:rgba(245,239,224,.68); text-decoration:none}
+  .footer-meta a:hover{color:var(--cover-ink)}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Senda Bíblica — Inicio">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 5.5c2.6-1 5.3-1 8 0v13c-2.7-1-5.4-1-8 0v-13Z"/>
+        <path d="M21 5.5c-2.6-1-5.3-1-8 0v13c2.7-1 5.4-1 8 0v-13Z"/>
+      </svg>
+      <span class="brand-name">Senda Bíblica</span>
+    </a>
+    <div class="header-actions">
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="estudios.html">Estudios</a>
+        <a href="recursos.html" aria-current="page">Recursos</a>
+      </nav>
+      <a class="icon-link" href="index.html#buscador" aria-label="Buscar una cita bíblica">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-intro">
+    <p class="eyebrow">Para profundizar</p>
+    <h1>Recursos</h1>
+    <p>Materiales de apoyo para tu estudio y respuestas a las preguntas más comunes.</p>
+  </section>
+
+  <section aria-labelledby="mat-h">
+    <h2 id="mat-h">Guías de estudio</h2>
+    <div class="resource-grid">
+      <article class="resource-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h6"/>
+        </svg>
+        <h3>Guía del líder de grupo</h3>
+        <p>Preguntas disparadoras y sugerencias de tiempo para dirigir cada sesión en comunidad.</p>
+        <span class="resource-note">Disponible al iniciar un estudio en grupo</span>
+      </article>
+      <article class="resource-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 5.5c2.6-1 5.3-1 8 0v13c-2.7-1-5.4-1-8 0v-13Z"/>
+          <path d="M21 5.5c-2.6-1-5.3-1-8 0v13c2.7-1 5.4-1 8 0v-13Z"/>
+        </svg>
+        <h3>Diario de lectura semanal</h3>
+        <p>Una plantilla sencilla para anotar lo que lees, lo que te llama la atención y cómo aplicarlo.</p>
+        <span class="resource-note">Se entrega con cada estudio</span>
+      </article>
+      <article class="resource-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M14.8 9.2 13 13l-3.8 1.8L11 11l3.8-1.8Z"/>
+        </svg>
+        <h3>Preguntas por capítulo</h3>
+        <p>Preguntas de reflexión organizadas capítulo a capítulo para el estudio personal.</p>
+        <span class="resource-note">Incluidas en cada plan semanal</span>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-h">
+    <h2 id="faq-h">Preguntas frecuentes</h2>
+    <details class="faq-item">
+      <summary>¿Necesito experiencia previa para empezar?</summary>
+      <p>No. Cada estudio empieza desde lo básico y las preguntas están pensadas para cualquier nivel, sin importar cuánto conozcas la Biblia.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Puedo hacer los estudios en grupo?</summary>
+      <p>Sí. Cada plan incluye una guía para quien dirige el grupo, con preguntas pensadas para la conversación, no solo para leer en silencio.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Cuánto tiempo toma cada semana?</summary>
+      <p>Entre 20 y 30 minutos de lectura y reflexión personal. Si lo haces en grupo, la reunión suele durar una hora.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Qué versión de la Biblia usan los estudios?</summary>
+      <p>Las referencias están pensadas para funcionar con cualquier versión en español; recomendamos Reina-Valera 1960 o Nueva Versión Internacional.</p>
+    </details>
+  </section>
+
+  <section aria-labelledby="contact-h">
+    <h2 id="contact-h">Contacto</h2>
+    <p>Escríbenos si tienes dudas sobre algún estudio o quieres sugerir un tema.</p>
+    <div class="contact-row">
+      <span class="contact-value" id="email-value">contacto@sendabiblica.org</span>
+      <button class="btn btn-copy" data-copy-target="email-value" data-status-target="copy-status" type="button">Copiar</button>
+    </div>
+    <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-verse">«Lámpara es a mis pies tu palabra, y lumbrera a mi camino.» — Salmos 119:105</p>
+    <div class="footer-meta">
+      <span>Senda Bíblica</span>
+      <nav aria-label="Enlaces del pie de página">
+        <a href="index.html">Inicio</a>
+        <a href="estudios.html">Estudios</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.btn-copy').forEach(function(btn){
+    var original = btn.textContent;
+    var timer;
+    btn.addEventListener('click', function(){
+      var el = document.getElementById(btn.getAttribute('data-copy-target'));
+      var status = document.getElementById(btn.getAttribute('data-status-target'));
+      var text = el.textContent.trim();
+      function setStatus(kind, icon, msg){
+        status.className = 'copy-status is-' + kind;
+        status.innerHTML = '<span class="state-icon" aria-hidden="true">' + icon + '</span>' + msg;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          status.className = 'copy-status'; status.innerHTML = '';
+          btn.textContent = original; btn.classList.remove('is-success');
+        }, 3000);
+      }
+      function showCopied(){
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('is-success');
+        setStatus('success','✓','Correo copiado. Ya puedes pegarlo en tu aplicación de correo.');
+      }
+      function selectFallback(){
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        var sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+        setStatus('info','i','Texto seleccionado. Pulsa Ctrl+C (o mantén presionado en el celular) para copiarlo.');
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied).catch(selectFallback);
+      } else {
+        selectFallback();
+      }
+    });
+  });
+</script>
+</body>
+</html>

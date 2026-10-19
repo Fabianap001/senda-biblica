@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estudios · Senda Bíblica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Diseño fijo — no cambia con el modo oscuro/claro del navegador */
+  :root{
+    --bg:#F3ECD9; --surface:#FFFFFF; --surface-2:#EAE1C8;
+    --ink:#241F19; --ink-soft:#6E6455;
+    --accent:#8C6D1F; --accent-text:#7A5D18; --accent-ink:#241F19;
+    --accent-2:#7C2A2A; --accent-3:#2A1B0C;
+    --line:#DDD2B4; --cover-ink:#F5EFE0;
+    /* Colores de estado — siempre acompañados de ícono + texto */
+    --error:#A8322A;   --error-on-dark:#F0A08F;
+    --success:#2E6B3E; --success-on-dark:#8FD1A0;
+    --info:#7A5D18;    --info-on-dark:#C9A34F;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size:17px; line-height:1.6;
+  }
+  img{max-width:100%}
+  h1,h2,h3{
+    font-family:'Playfair Display', Georgia, serif; font-weight:600; color:var(--ink);
+    line-height:1.15; margin:0 0 .5rem; text-wrap:balance;
+  }
+  h1{font-size:clamp(2.1rem,4vw + 1rem,3.1rem); font-weight:700}
+  h2{font-size:clamp(1.4rem,2vw + 1rem,1.7rem); margin:0}
+  h3{font-size:1.1rem}
+  p{margin:0 0 1rem; color:var(--ink); max-width:64ch}
+  a{color:var(--accent-2)}
+  ul,ol{padding:0;margin:0;list-style:none}
+  .eyebrow{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.78rem; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .6rem;
+  }
+
+  .site-header{
+    position:relative; isolation:isolate;
+    background:
+      linear-gradient(175deg, rgba(14,8,3,.5), rgba(14,8,3,.74)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .header-inner{
+    max-width:1100px; margin-inline:auto; padding-inline:20px;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding-block:1.05rem; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--cover-ink)}
+  .brand-mark{width:26px; height:26px; color:var(--accent); flex:none}
+  .brand-name{font-family:'Playfair Display', serif; font-weight:600; font-size:1.15rem; letter-spacing:.01em}
+  .site-nav{display:flex; gap:1.4rem; font-family:'IBM Plex Sans', sans-serif; font-size:.92rem; font-weight:500}
+  .site-nav a{color:rgba(245,239,224,.72); text-decoration:none; padding-block:.2rem; border-bottom:2px solid transparent}
+  .site-nav a:hover{color:var(--cover-ink)}
+  .site-nav a[aria-current="page"]{color:var(--cover-ink); border-bottom-color:var(--accent)}
+  .header-actions{display:flex; align-items:center; gap:1.3rem; flex-wrap:wrap}
+  .icon-link{
+    display:flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem;
+    color:rgba(245,239,224,.72); border-radius:50%; flex:none; transition:color .12s ease, background .12s ease;
+  }
+  .icon-link svg{width:19px; height:19px}
+  .icon-link:hover{color:var(--cover-ink); background:rgba(255,255,255,.1)}
+
+  main{
+    background:var(--bg);
+    padding-block:2.5rem 3.5rem;
+  }
+  section{max-width:1100px; margin-inline:auto; padding-inline:20px; margin-block:3rem}
+  .page-intro p{color:var(--ink-soft); font-size:1.05rem; max-width:60ch}
+
+  .group-head{display:flex; align-items:baseline; gap:.9rem; margin-bottom:1.3rem; flex-wrap:wrap}
+  .tag{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.8rem; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; padding-bottom:.4rem;
+    border-bottom:2px solid var(--tag-color); display:inline-block;
+  }
+  .tag-at{--tag-color:var(--accent-2); color:var(--accent-2)}
+  .tag-nt{--tag-color:var(--accent); color:var(--accent-text)}
+  .tag-temas{--tag-color:var(--accent-3); color:var(--accent-3)}
+  .group-count{font-family:'IBM Plex Sans', sans-serif; font-size:.85rem; color:var(--ink-soft)}
+
+  .study-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.4rem}
+  .study-card{
+    background:#2A1B0C; border:1px solid rgba(245,239,224,.15); border-radius:2px;
+    border-top:3px solid #C9A34F;
+    padding:1.4rem; display:flex; flex-direction:column; gap:.6rem;
+  }
+  .study-card-top{display:flex; justify-content:space-between; align-items:baseline; gap:.6rem}
+  .study-card-top h3{margin:0; color:#F5EFE0}
+  .duration{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.78rem; color:rgba(245,239,224,.6);
+    white-space:nowrap; flex:none;
+  }
+  .study-card p{color:rgba(245,239,224,.68); font-size:.96rem; margin-bottom:0; flex:1}
+  .card-link{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.88rem; font-weight:600;
+    text-decoration:none; color:#C9A34F;
+  }
+  .card-link:hover{text-decoration:underline}
+
+  .site-footer{
+    position:relative; padding-block:2.2rem; margin-top:2rem;
+    background:
+      linear-gradient(5deg, rgba(14,8,3,.72), rgba(14,8,3,.5)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-footer::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .footer-inner{max-width:1100px; margin-inline:auto; padding-inline:20px}
+  .footer-verse{font-family:'Playfair Display', serif; font-style:normal; color:var(--cover-ink); font-size:.95rem; margin-bottom:1rem; opacity:.94}
+  .footer-meta{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.75rem; font-family:'IBM Plex Sans', sans-serif; font-size:.85rem; color:rgba(245,239,224,.68)}
+  .footer-meta nav{display:flex; gap:1rem}
+  .footer-meta a{color:rgba(245,239,224,.68); text-decoration:none}
+  .footer-meta a:hover{color:var(--cover-ink)}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Senda Bíblica — Inicio">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 5.5c2.6-1 5.3-1 8 0v13c-2.7-1-5.4-1-8 0v-13Z"/>
+        <path d="M21 5.5c-2.6-1-5.3-1-8 0v13c2.7-1 5.4-1 8 0v-13Z"/>
+      </svg>
+      <span class="brand-name">Senda Bíblica</span>
+    </a>
+    <div class="header-actions">
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="estudios.html" aria-current="page">Estudios</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+      <a class="icon-link" href="index.html#buscador" aria-label="Buscar una cita bíblica">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-intro">
+    <p class="eyebrow">Biblioteca de estudios</p>
+    <h1>Estudios bíblicos</h1>
+    <p>Organizados en tres grupos para que sea fácil elegir por dónde empezar. Cada tarjeta indica la duración del plan.</p>
+  </section>
+
+  <section aria-labelledby="at-h">
+    <div class="group-head">
+      <span id="at-h" class="tag tag-at">Antiguo Testamento</span>
+      <span class="group-count">4 estudios</span>
+    </div>
+    <div class="study-grid">
+      <article class="study-card at">
+        <div class="study-card-top"><h3>Génesis: orígenes</h3><span class="duration">6 semanas</span></div>
+        <p>Los primeros capítulos de la historia: creación, caída y la promesa que atraviesa toda la Escritura.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card at">
+        <div class="study-card-top"><h3>Éxodo: liberación</h3><span class="duration">5 semanas</span></div>
+        <p>El paso de la esclavitud a la libertad, y lo que significa ser un pueblo guiado por Dios.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card at">
+        <div class="study-card-top"><h3>Salmos: oración y alabanza</h3><span class="duration">4 semanas</span></div>
+        <p>Un recorrido por salmos de lamento, confianza y gratitud, para aprender a orar con el lenguaje bíblico.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card at">
+        <div class="study-card-top"><h3>Proverbios: sabiduría práctica</h3><span class="duration">4 semanas</span></div>
+        <p>Principios concretos para el trabajo, el dinero, las palabras y las relaciones cotidianas.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="nt-h">
+    <div class="group-head">
+      <span id="nt-h" class="tag tag-nt">Nuevo Testamento</span>
+      <span class="group-count">4 estudios</span>
+    </div>
+    <div class="study-grid">
+      <article class="study-card nt">
+        <div class="study-card-top"><h3>Evangelio de Juan</h3><span class="duration">8 semanas</span></div>
+        <p>Quién es Jesús según los siete "yo soy" y las señales que Juan elige para mostrarlo.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card nt">
+        <div class="study-card-top"><h3>Romanos: el evangelio explicado</h3><span class="duration">6 semanas</span></div>
+        <p>El argumento de Pablo sobre gracia, fe y una vida transformada, capítulo a capítulo.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card nt">
+        <div class="study-card-top"><h3>Efesios: identidad en Cristo</h3><span class="duration">4 semanas</span></div>
+        <p>Quién eres a la luz del evangelio, y cómo eso cambia la manera de vivir en comunidad.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card nt">
+        <div class="study-card-top"><h3>Santiago: fe en acción</h3><span class="duration">3 semanas</span></div>
+        <p>Una carta corta y directa sobre lo que se nota cuando la fe es real.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="temas-h">
+    <div class="group-head">
+      <span id="temas-h" class="tag tag-temas">Temas de vida</span>
+      <span class="group-count">3 estudios</span>
+    </div>
+    <div class="study-grid">
+      <article class="study-card temas">
+        <div class="study-card-top"><h3>La oración</h3><span class="duration">3 semanas</span></div>
+        <p>Qué enseña la Biblia sobre orar, con ejercicios prácticos para cada semana.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card temas">
+        <div class="study-card-top"><h3>Identidad y propósito</h3><span class="duration">4 semanas</span></div>
+        <p>Quién dice la Escritura que eres, más allá de lo que logras o produces.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+      <article class="study-card temas">
+        <div class="study-card-top"><h3>Relaciones y comunidad</h3><span class="duration">3 semanas</span></div>
+        <p>Cómo vivir en comunidad real a partir de los textos sobre el cuerpo de Cristo.</p>
+        <a class="card-link" href="recursos.html">Ver guía de estudio →</a>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-verse">«Lámpara es a mis pies tu palabra, y lumbrera a mi camino.» — Salmos 119:105</p>
+    <div class="footer-meta">
+      <span>Senda Bíblica</span>
+      <nav aria-label="Enlaces del pie de página">
+        <a href="index.html">Inicio</a>
+        <a href="estudios.html">Estudios</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

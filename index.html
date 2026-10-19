@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Senda Bíblica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Diseño fijo — no cambia con el modo oscuro/claro del navegador */
+  :root{
+    --bg:#F3ECD9; --surface:#FFFFFF; --surface-2:#EAE1C8;
+    --ink:#241F19; --ink-soft:#6E6455;
+    --accent:#8C6D1F; --accent-text:#7A5D18; --accent-ink:#241F19;
+    --accent-2:#7C2A2A; --accent-3:#2A1B0C;
+    --line:#DDD2B4; --cover-ink:#F5EFE0;
+    /* Colores de estado — siempre acompañados de ícono + texto */
+    --error:#A8322A;   --error-on-dark:#F0A08F;
+    --success:#2E6B3E; --success-on-dark:#8FD1A0;
+    --info:#7A5D18;    --info-on-dark:#C9A34F;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size:17px; line-height:1.6;
+  }
+  img{max-width:100%}
+  h1,h2,h3{
+    font-family:'Playfair Display', Georgia, serif; font-weight:600; color:var(--ink);
+    line-height:1.15; margin:0 0 .5rem; text-wrap:balance;
+  }
+  h1{font-size:clamp(2.1rem,4vw + 1rem,3.1rem); font-weight:700}
+  h2{font-size:clamp(1.5rem,2vw + 1rem,1.9rem)}
+  h3{font-size:1.15rem}
+  p{margin:0 0 1rem; color:var(--ink); max-width:64ch}
+  a{color:var(--accent-2)}
+  ul,ol{padding:0;margin:0;list-style:none}
+  .container{max-width:1100px; margin-inline:auto; padding-inline:20px}
+  .eyebrow{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.78rem; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .6rem;
+  }
+
+  /* Header — tapa de cuero */
+  .site-header{
+    position:relative; isolation:isolate;
+    background:
+      linear-gradient(175deg, rgba(14,8,3,.5), rgba(14,8,3,.74)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .header-inner{
+    max-width:1100px; margin-inline:auto; padding-inline:20px;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding-block:1.05rem; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--cover-ink)}
+  .brand-mark{width:26px; height:26px; color:var(--accent); flex:none}
+  .brand-name{font-family:'Playfair Display', serif; font-weight:600; font-size:1.15rem; letter-spacing:.01em}
+  .site-nav{display:flex; gap:1.4rem; font-family:'IBM Plex Sans', sans-serif; font-size:.92rem; font-weight:500}
+  .site-nav a{
+    color:rgba(245,239,224,.72); text-decoration:none; padding-block:.2rem;
+    border-bottom:2px solid transparent;
+  }
+  .site-nav a:hover{color:var(--cover-ink)}
+  .site-nav a[aria-current="page"]{color:var(--cover-ink); border-bottom-color:var(--accent)}
+  .header-actions{display:flex; align-items:center; gap:1.3rem; flex-wrap:wrap}
+  .icon-link{
+    display:flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem;
+    color:rgba(245,239,224,.72); border-radius:50%; flex:none; transition:color .12s ease, background .12s ease;
+  }
+  .icon-link svg{width:19px; height:19px}
+  .icon-link:hover{color:var(--cover-ink); background:rgba(255,255,255,.1)}
+
+  main{
+    background:var(--bg);
+    padding-block:2.5rem 3.5rem;
+  }
+  section{max-width:1100px; margin-inline:auto; padding-inline:20px; margin-block:3.5rem}
+
+  /* Buscador de citas */
+  .verse-search{
+    background:#2A1B0C; border:1px solid rgba(245,239,224,.15); border-radius:2px;
+    padding:1.8rem 1.6rem; border-top:3px solid #C9A34F;
+  }
+  .verse-search h2{color:#F5EFE0}
+  .verse-search .eyebrow{color:#C9A34F}
+  .search-lede{color:rgba(245,239,224,.72); font-size:1rem}
+  .search-form{display:flex; gap:.7rem; flex-wrap:wrap; margin-top:1.2rem}
+  .search-form input{
+    flex:1 1 260px; min-width:0; font-family:'IBM Plex Sans', sans-serif; font-size:.98rem;
+    padding:.8rem 1rem; border:1.5px solid rgba(245,239,224,.25); border-radius:3px;
+    background:rgba(255,255,255,.06); color:#F5EFE0;
+  }
+  .search-form input::placeholder{color:rgba(245,239,224,.45)}
+  .search-form input:focus{outline:2px solid #C9A34F; outline-offset:1px}
+  .search-chips{display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1rem}
+  .chip{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.82rem; font-weight:500;
+    padding:.4rem .85rem; border-radius:20px; border:1px solid rgba(245,239,224,.3);
+    background:transparent; color:rgba(245,239,224,.78); cursor:pointer; transition:border-color .12s ease, color .12s ease;
+  }
+  .chip:hover{border-color:#C9A34F; color:#F5EFE0}
+  .verse-result{
+    margin-top:1.4rem; padding:1.1rem 1.3rem; border:1px solid rgba(245,239,224,.18);
+    border-left:4px solid #C9A34F; background:rgba(255,255,255,.05);
+    border-radius:0 2px 2px 0;
+  }
+  /* Estados del buscador: info (resultado), error (sin resultado / campo vacío) */
+  .verse-result.is-info{border-left-color:var(--info-on-dark)}
+  .verse-result.is-error{border-left-color:var(--error-on-dark); background:rgba(240,160,143,.08)}
+  .state-label{
+    display:flex; align-items:center; gap:.5rem; margin:0 0 .5rem;
+    font-family:'IBM Plex Sans', sans-serif; font-size:.75rem; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase;
+  }
+  .state-icon{
+    display:inline-grid; place-items:center; width:1.35rem; height:1.35rem; border-radius:50%;
+    font-size:.8rem; font-weight:700; line-height:1; letter-spacing:0; text-transform:none; color:#2A1B0C;
+  }
+  .is-info .state-label{color:var(--info-on-dark)}
+  .is-info .state-icon{background:var(--info-on-dark)}
+  .is-error .state-label{color:var(--error-on-dark)}
+  .is-error .state-icon{background:var(--error-on-dark)}
+  .search-form input[aria-invalid="true"]{border-color:var(--error-on-dark)}
+  .search-form input[aria-invalid="true"]:focus{outline-color:var(--error-on-dark)}
+  .verse-result .result-text{
+    font-family:'Playfair Display', serif; font-style:normal; font-size:1.1rem; color:#F5EFE0; margin-bottom:.4rem;
+  }
+  .verse-result .result-ref{
+    font-family:'IBM Plex Sans', sans-serif; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase;
+    color:#C9A34F; margin-bottom:0;
+  }
+  .verse-result .result-empty-title{font-weight:600; margin-bottom:.3rem; color:#F5EFE0}
+  .verse-result .result-empty-hint{color:rgba(245,239,224,.65); font-size:.92rem; margin-bottom:0}
+
+  /* Hero */
+  .hero{padding-block:1rem 1.5rem}
+  .hero-lede{font-size:1.1rem; color:var(--ink-soft); max-width:56ch}
+  .hero-actions{display:flex; gap:.9rem; flex-wrap:wrap; margin-top:1.5rem}
+
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:.95rem;
+    text-decoration:none; padding:.85rem 1.5rem; border-radius:3px; display:inline-block;
+    border:1.5px solid transparent; transition:transform .12s ease, filter .12s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{
+    background:#8C6D1F;
+    color:#FBF7EC; border-color:rgba(0,0,0,.2);
+  }
+  .btn-primary:hover{filter:brightness(.93)}
+  .btn-ghost{background:transparent; color:var(--ink); border-color:var(--ink-soft)}
+  .btn-ghost:hover{border-color:var(--ink)}
+
+  /* Features */
+  .feature-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; margin-top:1.5rem;
+  }
+  .feature-card{
+    background:#2A1B0C; border:1px solid rgba(245,239,224,.15); border-radius:2px;
+    padding:1.5rem; border-top:3px solid #C9A34F;
+  }
+  .feature-card svg{width:26px; height:26px; color:#C9A34F; margin-bottom:.75rem}
+  .feature-card h3{color:#F5EFE0}
+  .feature-card p{color:rgba(245,239,224,.68); font-size:.98rem; margin-bottom:0}
+
+  /* Steps */
+  .steps-list{display:flex; flex-direction:column; gap:1.4rem; margin-top:1.5rem}
+  .steps-list li{display:flex; gap:1.1rem; align-items:flex-start}
+  .step-num{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:.85rem;
+    color:var(--accent-2); border:1.5px solid var(--accent-2); border-radius:50%;
+    width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .steps-list h3{margin-bottom:.25rem}
+  .steps-list p{color:var(--ink-soft); margin-bottom:0}
+
+  /* Verse highlight — Von Restorff */
+  .verse-highlight{
+    position:relative; isolation:isolate; overflow:hidden;
+    background:#2A1B0C; color:#FBF7EC; padding:2.2rem 1.5rem; border-radius:2px;
+    max-width:1100px; border-block:1px solid rgba(255,255,255,.22);
+  }
+  .verse-highlight::before{
+    content:""; position:absolute; inset:0; z-index:-2;
+    background:url('fondo-cita.png') center/cover no-repeat;
+    filter:brightness(.5) saturate(.7) sepia(.15);
+  }
+  .verse-highlight::after{
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(175deg, rgba(20,12,4,.4), rgba(20,12,4,.68));
+  }
+  .verse-highlight blockquote{margin:0; max-width:60ch; margin-inline:auto; text-align:center}
+  .verse-highlight p{
+    font-family:'Playfair Display', serif; font-style:normal; font-size:1.35rem; color:#FBF7EC;
+    max-width:none; margin-bottom:.75rem;
+  }
+  .verse-highlight cite{
+    font-family:'IBM Plex Sans', sans-serif; font-style:normal; font-size:.85rem;
+    letter-spacing:.08em; text-transform:uppercase; opacity:.85;
+  }
+
+  /* Footer — contratapa de cuero */
+  .site-footer{
+    position:relative; padding-block:2.2rem; margin-top:2rem;
+    background:
+      linear-gradient(5deg, rgba(14,8,3,.72), rgba(14,8,3,.5)),
+      url('leather-dark.jpg') center/cover;
+  }
+  .site-footer::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:2px;
+    background-image:repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 14px);
+    opacity:.6;
+  }
+  .footer-inner{max-width:1100px; margin-inline:auto; padding-inline:20px}
+  .footer-verse{
+    font-family:'Playfair Display', serif; font-style:normal; color:var(--cover-ink);
+    font-size:.95rem; margin-bottom:1rem; opacity:.94;
+  }
+  .footer-meta{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.75rem;
+    font-family:'IBM Plex Sans', sans-serif; font-size:.85rem; color:rgba(245,239,224,.68);
+  }
+  .footer-meta nav{display:flex; gap:1rem}
+  .footer-meta a{color:rgba(245,239,224,.68); text-decoration:none}
+  .footer-meta a:hover{color:var(--cover-ink)}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+  @media (max-width:640px){
+    .site-nav{gap:1rem}
+    .verse-highlight p{font-size:1.15rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Senda Bíblica — Inicio">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 5.5c2.6-1 5.3-1 8 0v13c-2.7-1-5.4-1-8 0v-13Z"/>
+        <path d="M21 5.5c-2.6-1-5.3-1-8 0v13c2.7-1 5.4-1 8 0v-13Z"/>
+      </svg>
+      <span class="brand-name">Senda Bíblica</span>
+    </a>
+    <div class="header-actions">
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html" aria-current="page">Inicio</a>
+        <a href="estudios.html">Estudios</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+      <a class="icon-link" href="#buscador" aria-label="Buscar una cita bíblica">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Un plan, un paso a la vez</p>
+    <h1>Camina la Escritura con una senda clara</h1>
+    <p class="hero-lede">Estudios bíblicos organizados por libro y por tema, pensados para leer, entender y aplicar la Palabra semana a semana — solo o en grupo.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="estudios.html">Explorar los estudios</a>
+      <a class="btn btn-ghost" href="recursos.html">Ver recursos</a>
+    </div>
+  </section>
+
+  <section id="buscador" aria-labelledby="buscador-h">
+    <div class="verse-search">
+      <p class="eyebrow">Consulta rápida</p>
+      <h2 id="buscador-h">Busca una cita bíblica</h2>
+      <p class="search-lede">Escribe una referencia, como <strong>Juan 3:16</strong>, o una palabra clave para encontrar el texto.</p>
+
+      <form class="search-form" id="verse-form" role="search" aria-label="Buscador de citas bíblicas">
+        <input type="text" id="verse-input" name="verse" list="verse-suggestions" placeholder="Ej. Salmos 23:1 o «esperanza»" autocomplete="off" aria-label="Escribe una cita o palabra clave">
+        <datalist id="verse-suggestions"></datalist>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+
+      <div class="search-chips" aria-label="Ejemplos de búsqueda">
+        <button type="button" class="chip" data-example="Juan 3:16">Juan 3:16</button>
+        <button type="button" class="chip" data-example="Salmos 23:1">Salmos 23:1</button>
+        <button type="button" class="chip" data-example="Génesis 1:1">Génesis 1:1</button>
+        <button type="button" class="chip" data-example="Filipenses 4:13">Filipenses 4:13</button>
+      </div>
+
+      <div id="verse-result" class="verse-result" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="features-h">
+    <p class="eyebrow">Contenido del sitio</p>
+    <h2 id="features-h">Qué encontrarás aquí</h2>
+    <div class="feature-grid">
+      <article class="feature-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 5.5c2.6-1 5.3-1 8 0v13c-2.7-1-5.4-1-8 0v-13Z"/>
+          <path d="M21 5.5c-2.6-1-5.3-1-8 0v13c2.7-1 5.4-1 8 0v-13Z"/>
+        </svg>
+        <h3>Estudios por libro</h3>
+        <p>Recorridos capítulo a capítulo por el Antiguo y el Nuevo Testamento, con preguntas de reflexión al cierre de cada semana.</p>
+      </article>
+      <article class="feature-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M14.8 9.2 13 13l-3.8 1.8L11 11l3.8-1.8Z"/>
+        </svg>
+        <h3>Estudios por tema</h3>
+        <p>Planes cortos sobre oración, identidad, relaciones y otros temas de la vida cotidiana, en tres o cuatro semanas.</p>
+      </article>
+      <article class="feature-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v2M12 19v2M4.2 6.2l1.4 1.4M18.4 17.4l1.4 1.4M4.2 17.8l1.4-1.4M18.4 6.6l1.4-1.4"/>
+          <circle cx="12" cy="12" r="4.5"/>
+        </svg>
+        <h3>Recursos de apoyo</h3>
+        <p>Guías de estudio, preguntas frecuentes y materiales para profundizar cada semana, solos o en grupo.</p>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="steps-h">
+    <p class="eyebrow">Tres pasos</p>
+    <h2 id="steps-h">Cómo funciona</h2>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">01</span>
+        <div><h3>Elige un estudio</h3><p>Por libro bíblico o por tema, según lo que estés buscando en este momento.</p></div>
+      </li>
+      <li>
+        <span class="step-num">02</span>
+        <div><h3>Sigue el plan semanal</h3><p>Cada estudio está dividido en semanas, con lecturas cortas y preguntas guía.</p></div>
+      </li>
+      <li>
+        <span class="step-num">03</span>
+        <div><h3>Profundiza con los recursos</h3><p>Consulta las guías y las preguntas frecuentes cuando lo necesites.</p></div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="verse-highlight">
+      <blockquote>
+        <p>«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.»</p>
+        <cite>Juan 5:39</cite>
+      </blockquote>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-verse">«Lámpara es a mis pies tu palabra, y lumbrera a mi camino.» — Salmos 119:105</p>
+    <div class="footer-meta">
+      <span>Senda Bíblica</span>
+      <nav aria-label="Enlaces del pie de página">
+        <a href="index.html">Inicio</a>
+        <a href="estudios.html">Estudios</a>
+        <a href="recursos.html">Recursos</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function norm(s){
+    return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+  }
+
+  var verses = [
+    {ref:'Génesis 1:1', text:'En el principio creó Dios los cielos y la tierra.'},
+    {ref:'Éxodo 20:3', text:'No tendrás dioses ajenos delante de mí.'},
+    {ref:'Josué 1:9', text:'Mira que te mando que te esfuerces y seas valiente; no temas ni desmayes, porque Jehová tu Dios estará contigo en dondequiera que vayas.'},
+    {ref:'Salmos 23:1', text:'Jehová es mi pastor; nada me faltará.'},
+    {ref:'Salmos 119:105', text:'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.'},
+    {ref:'Proverbios 3:5-6', text:'Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas.'},
+    {ref:'Isaías 41:10', text:'No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré.'},
+    {ref:'Jeremías 29:11', text:'Porque yo sé los pensamientos que tengo acerca de vosotros, dice Jehová, pensamientos de paz, y no de mal, para daros el fin que esperáis.'},
+    {ref:'Mateo 6:33', text:'Mas buscad primeramente el reino de Dios y su justicia, y todas estas cosas os serán añadidas.'},
+    {ref:'Juan 3:16', text:'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree no se pierda, mas tenga vida eterna.'},
+    {ref:'Juan 5:39', text:'Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.'},
+    {ref:'Romanos 8:28', text:'Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados.'},
+    {ref:'Romanos 12:2', text:'No os conforméis a este siglo, sino transformaos por medio de la renovación de vuestro entendimiento.'},
+    {ref:'1 Corintios 13:4', text:'El amor es sufrido, es benigno; el amor no tiene envidia, el amor no es jactancioso, no se envanece.'},
+    {ref:'Efesios 2:8', text:'Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios.'},
+    {ref:'Filipenses 4:13', text:'Todo lo puedo en Cristo que me fortalece.'},
+    {ref:'Santiago 1:22', text:'Sed hacedores de la palabra, y no tan solamente oidores, engañándoos a vosotros mismos.'}
+  ];
+  verses.forEach(function(v){ v.key = norm(v.ref); v.textKey = norm(v.text); });
+
+  var datalist = document.getElementById('verse-suggestions');
+  verses.forEach(function(v){
+    var opt = document.createElement('option');
+    opt.value = v.ref;
+    datalist.appendChild(opt);
+  });
+
+  var form = document.getElementById('verse-form');
+  var input = document.getElementById('verse-input');
+  var resultEl = document.getElementById('verse-result');
+
+  function search(query){
+    var q = norm(query);
+    if(!q) return null;
+    var exact = verses.filter(function(v){ return v.key === q; })[0];
+    if(exact) return exact;
+    return verses.filter(function(v){
+      return v.key.indexOf(q) !== -1 || v.textKey.indexOf(q) !== -1;
+    })[0] || null;
+  }
+
+  function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+  function label(kind, icon, text){
+    return '<p class="state-label"><span class="state-icon" aria-hidden="true">' + icon + '</span>' + text + '</p>';
+  }
+
+  function showError(title, hint){
+    input.setAttribute('aria-invalid','true');
+    resultEl.className = 'verse-result is-error';
+    resultEl.innerHTML = label('error','✕','Error') +
+      '<p class="result-empty-title">' + title + '</p>' +
+      '<p class="result-empty-hint">' + hint + '</p>';
+  }
+
+  function render(v, queryDisplay){
+    if(!norm(queryDisplay)){
+      showError('Escribe una cita o una palabra antes de buscar.',
+        'Ejemplo: Juan 3:16, Salmos 23:1 o «esperanza». También puedes tocar uno de los ejemplos de arriba.');
+      return;
+    }
+    if(!v){
+      showError('No encontramos «' + esc(queryDisplay) + '» en esta búsqueda.',
+        'Prueba con una referencia como Juan 3:16 o Salmos 23:1, o una palabra como «fe» o «temor».');
+      return;
+    }
+    input.removeAttribute('aria-invalid');
+    resultEl.className = 'verse-result is-info';
+    resultEl.innerHTML = label('info','i','Resultado') +
+      '<p class="result-text">«' + v.text + '»</p>' +
+      '<p class="result-ref">' + v.ref + '</p>';
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    render(search(input.value), input.value);
+    if(input.getAttribute('aria-invalid')==='true') input.focus();
+  });
+
+  input.addEventListener('input', function(){
+    if(input.getAttribute('aria-invalid')==='true') input.removeAttribute('aria-invalid');
+  });
+
+  document.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var example = chip.getAttribute('data-example');
+      input.value = example;
+      render(search(example), example);
+      input.focus();
+    });
+  });
+
+  render(search('Salmos 119:105'), 'Salmos 119:105');
+
+  if (location.hash === '#buscador') {
+    input.focus({preventScroll:true});
+  }
+})();
+</script>
+</body>
+</html>
